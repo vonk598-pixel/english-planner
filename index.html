@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+
+  <meta name="theme-color" content="#0c0c11">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Study Planner">
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Estudos — English Grammar in Use</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0c0c11;
+  --s1:#14141c;
+  --s2:#1c1c27;
+  --s3:#242433;
+  --border:#2e2e42;
+  --text:#e4e2f0;
+  --muted:#7a7896;
+  --faint:#3a3856;
+
+  --violet:#8b7ff5;
+  --violet-d:#6b5fd4;
+  --violet-glow:rgba(139,127,245,0.15);
+  --teal:#3ecfb0;
+  --teal-glow:rgba(62,207,176,0.12);
+  --amber:#f0b840;
+  --amber-glow:rgba(240,184,64,0.12);
+  --rose:#f0607a;
+  --rose-glow:rgba(240,96,122,0.12);
+  --sky:#60b8f0;
+  --sky-glow:rgba(96,184,240,0.12);
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+
+/* ── NAV HEADER ── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,12,17,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;
+}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:var(--violet);box-shadow:0 0 8px var(--violet)}
+.nav-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--text)}
+.nav-sub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.nav-tabs{display:flex;gap:4px}
+.ntab{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.ntab:hover{border-color:var(--violet);color:var(--violet)}
+.ntab.active{background:var(--violet);border-color:var(--violet);color:#fff}
+
+/* ── PAGES ── */
+.page{display:none;padding:32px 20px 80px;max-width:900px;margin:0 auto}
+.page.active{display:block}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:48px 0 40px;border-bottom:1px solid var(--border);margin-bottom:40px}
+.hero-eye{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--violet);margin-bottom:14px}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(32px,6vw,52px);line-height:1.1;margin-bottom:16px}
+.hero-title em{font-style:italic;color:var(--violet)}
+.hero-desc{font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 28px}
+.hero-stats{display:flex;justify-content:center;gap:32px;flex-wrap:wrap}
+.hstat{text-align:center}
+.hstat-n{font-family:'DM Serif Display',serif;font-size:36px;color:var(--violet);line-height:1}
+.hstat-l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+
+/* ── MODULES GRID ── */
+.mod-grid{display:grid;gap:14px}
+.mod-card{
+  background:var(--s1);border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;cursor:pointer;transition:all .2s;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;
+}
+.mod-card:hover{border-color:var(--violet);transform:translateY(-1px);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.mod-card.expanded{border-color:var(--violet);background:var(--s2)}
+.mod-num{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:13px;font-weight:500;
+  flex-shrink:0;
+}
+.mod-info{}
+.mod-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.mod-meta{font-size:12px;color:var(--muted)}
+.mod-badge{
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;
+}
+.mod-detail{display:none;border-top:1px solid var(--border);margin-top:16px;padding-top:16px;grid-column:1/-1}
+.mod-detail.open{display:block}
+.mod-weeks{display:grid;gap:8px}
+.week-row{background:var(--s3);border-radius:10px;padding:12px 14px}
+.week-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.week-tag{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:12px;background:var(--border);color:var(--muted)}
+.week-title{font-size:13px;font-weight:600;color:var(--text)}
+.day-list{display:grid;gap:4px}
+.day-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;padding:6px 8px;border-radius:7px;transition:background .1s}
+.day-item:hover{background:var(--s2)}
+.day-name{font-weight:600;color:var(--muted);width:60px;flex-shrink:0;font-family:'DM Mono',monospace;font-size:11px}
+.day-unit{color:var(--violet);font-family:'DM Mono',monospace;font-size:11px;flex-shrink:0;width:70px}
+.day-desc{color:var(--text);line-height:1.4;flex:1}
+.day-sat{color:var(--teal)}
+
+/* level colors */
+.lv-basic .mod-num{background:rgba(62,207,176,.15);color:var(--teal)}
+.lv-basic .mod-badge{background:var(--teal-glow);color:var(--teal)}
+.lv-inter .mod-num{background:var(--violet-glow);color:var(--violet)}
+.lv-inter .mod-badge{background:var(--violet-glow);color:var(--violet)}
+.lv-adv .mod-num{background:var(--amber-glow);color:var(--amber)}
+.lv-adv .mod-badge{background:var(--amber-glow);color:var(--amber)}
+
+/* ── CALENDAR ── */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.cal-nav{display:flex;gap:8px;align-items:center}
+.cal-nav button{background:var(--s2);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav button:hover{border-color:var(--violet);color:var(--violet)}
+.cal-month{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-hd{text-align:center;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 4px}
+.cal-day{
+  background:var(--s1);border:1px solid var(--border);border-radius:8px;
+  min-height:60px;padding:6px;cursor:pointer;transition:all .15s;position:relative;
+}
+.cal-day:hover{border-color:var(--violet)}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.today{border-color:var(--violet);background:var(--violet-glow)}
+.cal-day.has-lesson{border-color:var(--s3)}
+.cal-day.sat{border-color:rgba(62,207,176,.3);background:rgba(62,207,176,.04)}
+.cal-day.sun{opacity:.4}
+.cal-day-n{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.cal-lesson{font-size:9px;line-height:1.3;color:var(--text);background:var(--violet-glow);border-radius:4px;padding:2px 4px;margin-top:3px}
+.cal-lesson.sat-tag{background:var(--teal-glow);color:var(--teal)}
+.cal-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:3px}
+
+/* ── LESSON CARD ── */
+.lesson-page{}
+.lesson-selector{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:8px;margin-bottom:28px;
+}
+.lsb{
+  background:var(--s1);border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;cursor:pointer;transition:all .15s;text-align:center;
+}
+.lsb:hover{border-color:var(--violet)}
+.lsb.active{border-color:var(--violet);background:var(--violet-glow)}
+.lsb-n{font-size:11px;font-weight:700;color:var(--violet);font-family:'DM Mono',monospace}
+.lsb-t{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.3}
+
+.lesson-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.lc-header{background:var(--s2);padding:20px 24px;border-bottom:1px solid var(--border)}
+.lc-eye{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--violet);margin-bottom:8px}
+.lc-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);margin-bottom:4px}
+.lc-meta{font-size:12px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.lc-body{padding:24px}
+.lc-blocks{display:grid;gap:12px}
+.lc-block{border-radius:12px;padding:16px 18px}
+.lc-block.warm{background:rgba(96,184,240,.08);border-left:3px solid var(--sky)}
+.lc-block.theory{background:var(--violet-glow);border-left:3px solid var(--violet)}
+.lc-block.practice{background:var(--teal-glow);border-left:3px solid var(--teal)}
+.lc-block.diary{background:var(--amber-glow);border-left:3px solid var(--amber)}
+.lc-block.app{background:rgba(240,96,122,.08);border-left:3px solid var(--rose)}
+.lc-bt{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.lc-block.warm .lc-bt{color:var(--sky)}
+.lc-block.theory .lc-bt{color:var(--violet)}
+.lc-block.practice .lc-bt{color:var(--teal)}
+.lc-block.diary .lc-bt{color:var(--amber)}
+.lc-block.app .lc-bt{color:var(--rose)}
+.lc-block h4{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+.lc-block p,.lc-block li{font-size:13px;color:var(--text);line-height:1.7}
+.lc-block ul{padding-left:16px}
+.lc-block li{margin-bottom:3px}
+.lc-time{display:flex;align-items:center;gap:6px;margin-top:8px}
+.time-pill{background:var(--s3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted)}
+.lc-tip{background:var(--s3);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6}
+.lc-tip strong{color:var(--text)}
+
+/* ── CHECKLIST ── */
+.check-intro{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:24px}
+.check-intro h3{font-size:15px;font-weight:600;margin-bottom:8px}
+.check-intro p{font-size:13px;color:var(--muted);line-height:1.6}
+.check-week{margin-bottom:24px}
+.check-wh{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.check-wt{font-size:14px;font-weight:600;color:var(--text)}
+.check-wp{font-size:12px;color:var(--muted)}
+.check-list{display:grid;gap:6px}
+.check-item{display:flex;align-items:flex-start;gap:12px;background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .15s}
+.check-item:hover{border-color:var(--violet)}
+.check-item.done{opacity:.55;background:var(--s2)}
+.check-item.done .check-text{text-decoration:line-through;color:var(--muted)}
+.check-box{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.check-item.done .check-box{background:var(--teal);border-color:var(--teal)}
+.check-item.done .check-box::after{content:'✓';font-size:12px;color:#0c0c11;font-weight:700}
+.check-text{font-size:13px;line-height:1.5;flex:1}
+.check-unit{font-family:'DM Mono',monospace;font-size:11px;color:var(--violet);margin-top:2px}
+.progress-bar{height:6px;background:var(--s3);border-radius:6px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:var(--teal);border-radius:6px;transition:width .4s}
+.progress-label{font-size:11px;color:var(--muted);margin-top:4px;text-align:right}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--violet);color:#fff;border-radius:24px;padding:10px 20px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:200;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){
+  .nav{padding:12px 16px}
+  .page{padding:20px 14px 60px}
+  .cal-grid{gap:2px}
+  .cal-day{min-height:46px;padding:4px}
+  .lesson-selector{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .lc-body{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-dot"></div>
+    <div>
+      <div class="nav-title">English Study Planner</div>
+      <div class="nav-sub">Murphy Grammar in Use • 5ª Ed.</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="ntab active" onclick="showPage('overview')">Módulos</button>
+    <button class="ntab" onclick="showPage('calendar')">Calendário</button>
+    <button class="ntab" onclick="showPage('lesson')">Modelo de Aula</button>
+    <button class="ntab" onclick="showPage('checklist')">Progresso</button>
+  </div>
+</nav>
+
+<!-- PAGE: OVERVIEW -->
+<div class="page active" id="p-overview">
+  <div class="hero">
+    <div class="hero-eye">English Grammar in Use — Raymond Murphy</div>
+    <h1 class="hero-title">Seu plano de<br><em>7 meses</em></h1>
+    <p class="hero-desc">145 unidades • Segunda a sexta • 70 min por aula • Revisão livre aos sábados</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-n">145</div><div class="hstat-l">Unidades</div></div>
+      <div class="hstat"><div class="hstat-n">29</div><div class="hstat-l">Semanas</div></div>
+      <div class="hstat"><div class="hstat-n">70</div><div class="hstat-l">Min / Aula</div></div>
+      <div class="hstat"><div class="hstat-n">13</div><div class="hstat-l">Módulos</div></div>
+    </div>
+  </div>
+
+  <div class="mod-grid" id="modGrid"></div>
+</div>
+
+<!-- PAGE: CALENDAR -->
+<div class="page" id="p-calendar">
+  <div class="cal-header">
+    <div class="cal-month" id="calMonth">Mês</div>
+    <div class="cal-nav">
+      <button onclick="changeMonth(-1)">‹</button>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+  </div>
+  <div class="cal-grid" id="calGrid"></div>
+  <div class="cal-legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--violet-glow);border:1px solid var(--violet)"></div>Aula do dia</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--teal-glow);border:1px solid var(--teal)"></div>Revisão (Sábado)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--violet);"></div>Hoje</div>
+  </div>
+</div>
+
+<!-- PAGE: LESSON MODEL -->
+<div class="page" id="p-lesson">
+  <div style="margin-bottom:20px">
+    <div style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Selecione uma aula para ver o modelo detalhado</div>
+    <div class="lesson-selector" id="lessonSelector"></div>
+  </div>
+  <div class="lesson-card" id="lessonCard"></div>
+</div>
+
+<!-- PAGE: CHECKLIST -->
+<div class="page" id="p-checklist">
+  <div class="check-intro">
+    <h3>Seu progresso</h3>
+    <p>Marque cada aula conforme conclui. Seu progresso é salvo automaticamente neste dispositivo.</p>
+    <div class="progress-bar" style="margin-top:12px"><div class="progress-fill" id="totalFill" style="width:0%"></div></div>
+    <div class="progress-label" id="totalLabel">0 de 145 aulas concluídas</div>
+  </div>
+  <div id="checklistBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const MODULES = [
+  {
+    id:1, level:'basic', num:'01',
+    name:'Presente e Passado',
+    units:'Unidades 1–6',weeks:'Semanas 1–2',pages:'Págs. 2–12',
+    badge:'Básico-Intermediário',
+    weeks_detail:[
+      {
+        week:1,title:'Present Continuous, Simple e Contraste',
+        days:[
+          {d:'SEG',u:'Unit 1 | p.2',t:'Present Continuous (I am doing) — ação em andamento agora'},
+          {d:'TER',u:'Unit 2 | p.4',t:'Present Simple (I do) — rotinas, hábitos e fatos gerais'},
+          {d:'QUA',u:'Unit 3 | p.6',t:'Continuous vs Simple 1 — verbos de estado (know, want, need)'},
+          {d:'QUI',u:'Unit 4 | p.8',t:'Continuous vs Simple 2 — "being" e verbos que mudam de sentido'},
+          {d:'SEX',u:'Revisão',t:'Exercícios adicionais pág. 302 + diário + app Listen & Shadow'},
+          {d:'SÁB',u:'Livre',t:'Releia págs. 2–8 • Refaça exercícios errados • Cole texto no app',sat:true},
+        ]
+      },
+      {
+        week:2,title:'Past Simple e Past Continuous',
+        days:[
+          {d:'SEG',u:'Unit 5 | p.10',t:'Past Simple (I did) — ações concluídas no passado'},
+          {d:'TER',u:'Unit 6 | p.12',t:'Past Continuous (I was doing) — ação em progresso no passado'},
+          {d:'QUA',u:'App. 2 | p.294',t:'Tabela completa dos 4 tempos — revisão das formas afirm./neg./interrog.'},
+          {d:'QUI',u:'Ex. 1–2 | p.302',t:'Exercícios adicionais Present and Past — prática intensiva'},
+          {d:'SEX',u:'Revisão',t:'História curta no passado (5–8 frases) + app pronúncia'},
+          {d:'SÁB',u:'Livre',t:'Verbos irregulares App.1 p.292 • Shadowing no app',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:2, level:'basic', num:'02',
+    name:'Present Perfect e Passado Perfeito',
+    units:'Unidades 7–18',weeks:'Semanas 3–5',pages:'Págs. 14–36',
+    badge:'Intermediário Inicial',
+    weeks_detail:[
+      {
+        week:3,title:'Present Perfect — conceito central',
+        days:[
+          {d:'SEG',u:'Unit 7 | p.14',t:'Present Perfect 1 — passado com conexão ao presente (have done)'},
+          {d:'TER',u:'Unit 8 | p.16',t:'Present Perfect 2 — just, already, yet, ever, this morning/today'},
+          {d:'QUA',u:'Unit 9 | p.18',t:'Present Perfect Continuous — ação que continua (have been doing)'},
+          {d:'QUI',u:'Unit 10 | p.20',t:'Perfect Continuous vs Simple — processo vs resultado'},
+          {d:'SEX',u:'Revisão',t:'Exercícios adicionais pág. 303–304 + gravação de pronúncia no app'},
+          {d:'SÁB',u:'Livre',t:'Escreva sobre experiências de vida com "I have been to / done"',sat:true},
+        ]
+      },
+      {
+        week:4,title:'For, Since, Past Perfect',
+        days:[
+          {d:'SEG',u:'Unit 11 | p.22',t:'How long have you (been)…? — perguntas de duração'},
+          {d:'TER',u:'Unit 12 | p.24',t:'For and since — período vs ponto de início no tempo'},
+          {d:'QUA',u:'Unit 13 | p.26',t:'Present Perfect vs Past 1 — distinção fundamental de contexto'},
+          {d:'QUI',u:'Unit 14 | p.28',t:'Present Perfect vs Past 2 — gone to vs been to + nuances'},
+          {d:'SEX',u:'Unit 15 | p.30',t:'Past Perfect (I had done) — sequência de eventos no passado'},
+          {d:'SÁB',u:'Livre',t:'Exercícios adicionais 2–4 pág. 303–304 • Foco for/since/ago',sat:true},
+        ]
+      },
+      {
+        week:5,title:'Past Perfect Continuous, Have got, Used to',
+        days:[
+          {d:'SEG',u:'Unit 16 | p.32',t:'Past Perfect Continuous — ação antes de outro evento passado'},
+          {d:'TER',u:'Unit 17 | p.34',t:'Have and have got — diferenças e usos no inglês atual'},
+          {d:'QUA',u:'Unit 18 | p.36',t:'Used to (do) — hábitos do passado que não existem mais'},
+          {d:'QUI',u:'Ex. 9 | p.307',t:'Exercício adicional: Past Continuous and Used To — consolidação'},
+          {d:'SEX',u:'Revisão',t:'Texto: sua trajetória de vida em inglês + app gravação'},
+          {d:'SÁB',u:'Livre',t:'Exercícios adicionais 5–8 pág. 305–307 • Shadowing past perfect',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:3, level:'inter', num:'03',
+    name:'Futuro',
+    units:'Unidades 19–25',weeks:'Semanas 6–7',pages:'Págs. 38–50',
+    badge:'Intermediário',
+    weeks_detail:[
+      {
+        week:6,title:'Will, Going to, Present Continuous para futuro',
+        days:[
+          {d:'SEG',u:'Unit 19 | p.38',t:'Present tenses for the future — planos confirmados e horários fixos'},
+          {d:'TER',u:'Unit 20 | p.40',t:'I\'m going to — intenções e previsões baseadas em evidências'},
+          {d:'QUA',u:'Unit 21 | p.42',t:'Will and Shall 1 — decisões no momento, promessas, ofertas'},
+          {d:'QUI',u:'Unit 22 | p.44',t:'Will and Shall 2 — previsões, I think/I\'m sure + will, won\'t'},
+          {d:'SEX',u:'Unit 23 | p.46',t:'I will vs I\'m going to — distinção definitiva com exercícios'},
+          {d:'SÁB',u:'Livre',t:'Exercícios adicionais 10–13 pág. 308–310 • Escreva seus planos',sat:true},
+        ]
+      },
+      {
+        week:7,title:'Future Continuous, Perfect e When/If',
+        days:[
+          {d:'SEG',u:'Unit 24 | p.48',t:'Will be doing e will have done — futuro contínuo e perfeito'},
+          {d:'TER',u:'Unit 25 | p.50',t:'When I do / When I\'ve done / If and When — presente pelo futuro'},
+          {d:'QUA',u:'App.3 | p.295',t:'The Future — tabela completa de todos os usos futuros'},
+          {d:'QUI',u:'Ex.14–15 | p.311',t:'Past, Present and Future — exercícios que misturam todos os tempos'},
+          {d:'SEX',u:'Revisão',t:'Planos do fim de semana, próximo mês, próximo ano + app'},
+          {d:'SÁB',u:'Livre',t:'Revisão geral módulos 1–3 • Texto com passado, presente e futuro',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:4, level:'inter', num:'04',
+    name:'Verbos Modais',
+    units:'Unidades 26–37',weeks:'Semanas 8–10',pages:'Págs. 52–74',
+    badge:'Intermediário',
+    weeks_detail:[
+      {
+        week:8,title:'Can, Could, Must, May, Might',
+        days:[
+          {d:'SEG',u:'Unit 26 | p.52',t:'Can, could and be able to — habilidade presente e passada'},
+          {d:'TER',u:'Unit 27 | p.54',t:'Could (do) and could have (done) — possibilidade e crítica gentil'},
+          {d:'QUA',u:'Unit 28 | p.56',t:'Must and can\'t — dedução lógica com certeza positiva e negativa'},
+          {d:'QUI',u:'Unit 29 | p.58',t:'May and might 1 — possibilidade e incerteza no presente/futuro'},
+          {d:'SEX',u:'Unit 30 | p.60',t:'May and might 2 — passado + might not vs mustn\'t'},
+          {d:'SÁB',u:'Livre',t:'Exercícios adicionais 16–18 pág. 313 • Shadowing com frases modais',sat:true},
+        ]
+      },
+      {
+        week:9,title:'Have to, Must, Should, I\'d better',
+        days:[
+          {d:'SEG',u:'Unit 31 | p.62',t:'Have to and must — obrigação externa vs interna/pessoal'},
+          {d:'TER',u:'Unit 32 | p.64',t:'Must / mustn\'t / needn\'t — proibição vs desnecessidade'},
+          {d:'QUA',u:'Unit 33 | p.66',t:'Should 1 — conselho, recomendação e expectativa'},
+          {d:'QUI',u:'Unit 34 | p.68',t:'Should 2 — should have done: arrependimento e crítica'},
+          {d:'SEX',u:'Unit 35 | p.70',t:'I\'d better / It\'s time — urgência e senso de obrigação imediata'},
+          {d:'SÁB',u:'Livre',t:'Revisão Units 26–35 • Comparativo must/have to/should/might',sat:true},
+        ]
+      },
+      {
+        week:10,title:'Would, Requests e Revisão dos Modais',
+        days:[
+          {d:'SEG',u:'Unit 36 | p.72',t:'Would — situações hipotéticas, passadas e sonhos'},
+          {d:'TER',u:'Unit 37 | p.74',t:'Can/Could/Would you…? — pedidos, ofertas e permissão'},
+          {d:'QUA',u:'App.4 | p.296',t:'Modal verbs — tabela completa: can/could/will/would/shall/should/must'},
+          {d:'QUI',u:'Ex.16–18 | p.313',t:'Modal verbs — prática intensiva com contextos misturados'},
+          {d:'SEX',u:'Revisão',t:'Diálogos com modais + app gravação e análise de pronúncia'},
+          {d:'SÁB',u:'Livre',t:'Revise Appendix 4 (modais) • Shadowing frases com modais',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:5, level:'inter', num:'05',
+    name:'If / Wish e Voz Passiva',
+    units:'Unidades 38–46',weeks:'Semanas 11–13',pages:'Págs. 76–96',
+    badge:'Intermediário',
+    weeks_detail:[
+      {
+        week:11,title:'Condicionais e Wish',
+        days:[
+          {d:'SEG',u:'Unit 38 | p.76',t:'If I do… / if I did… — 1st conditional (real) vs 2nd (hipotético)'},
+          {d:'TER',u:'Unit 39 | p.78',t:'If I knew… / I wish I knew… — desejo sobre o presente'},
+          {d:'QUA',u:'Unit 40 | p.80',t:'If I had known… / I wish I had known… — 3rd conditional: passado irreal'},
+          {d:'QUI',u:'Unit 41 | p.82',t:'Wish — todos os usos: presente, passado, wish + would (queixa)'},
+          {d:'SEX',u:'Ex.19–21 | p.315',t:'Condicionais — exercícios mistos com os três tipos'},
+          {d:'SÁB',u:'Livre',t:'5 frases de cada tipo condicional • Shadowing no app',sat:true},
+        ]
+      },
+      {
+        week:12,title:'Voz Passiva',
+        days:[
+          {d:'SEG',u:'Unit 42 | p.84',t:'Passive 1 — is done / was done: ativa vs passiva, quando usar'},
+          {d:'TER',u:'Unit 43 | p.86',t:'Passive 2 — be done / been done / being done em vários tempos'},
+          {d:'QUA',u:'Unit 44 | p.88',t:'Passive 3 — verbos de dois objetos: "I was given a book"'},
+          {d:'QUI',u:'Unit 45 | p.90',t:'It is said that… / supposed to… — passivo com verbos de reporte'},
+          {d:'SEX',u:'Unit 46 | p.92',t:'Have something done — "I had my hair cut" + get something done'},
+          {d:'SÁB',u:'Livre',t:'Exercícios adicionais 22–24 pág. 316 • Transforme frases ativas em passivas',sat:true},
+        ]
+      },
+      {
+        week:13,title:'Reported Speech',
+        days:[
+          {d:'SEG',u:'Unit 47 | p.94',t:'Reported Speech 1 — he said that… + backshift dos tempos'},
+          {d:'TER',u:'Unit 48 | p.96',t:'Reported Speech 2 — perguntas, comandos, say vs tell'},
+          {d:'QUA',u:'Ex.25 | p.317',t:'Reported speech — prática com ask, tell, advise, warn, remind'},
+          {d:'QUI',u:'Revisão',t:'Revisão: modais, condicionais, passivo, discurso indireto'},
+          {d:'SEX',u:'Produção',t:'Texto com 5+ estruturas dos módulos 4–5 + app análise completa'},
+          {d:'SÁB',u:'Livre',t:'Revise as estruturas mais difíceis da semana • Shadowing no app',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:6, level:'inter', num:'06',
+    name:'Perguntas e Auxiliares',
+    units:'Unidades 49–52',weeks:'Semana 14',pages:'Págs. 98–104',
+    badge:'Intermediário',
+    weeks_detail:[
+      {
+        week:14,title:'Questions, Auxiliares e Question Tags',
+        days:[
+          {d:'SEG',u:'Unit 49 | p.98',t:'Questions 1 — formação com auxiliares, who asked what'},
+          {d:'TER',u:'Unit 50 | p.100',t:'Questions 2 — embedded questions: "Do you know what time it is?"'},
+          {d:'QUA',u:'Unit 51 | p.102',t:'Auxiliary verbs — So/Neither + auxiliares, I think so / hope so'},
+          {d:'QUI',u:'Unit 52 | p.104',t:'Question tags — formação e entonação: confirmação vs pergunta real'},
+          {d:'SEX',u:'Revisão',t:'App: gravar question tags com entonação correta + diálogo completo'},
+          {d:'SÁB',u:'Livre',t:'Pratique question tags no app • Escreva um diálogo completo',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:7, level:'adv', num:'07',
+    name:'-ing e Infinitivo',
+    units:'Unidades 53–68',weeks:'Semanas 15–17',pages:'Págs. 106–136',
+    badge:'Intermediário-Avançado',
+    weeks_detail:[
+      {
+        week:15,title:'Verbos + -ing e verbos + to',
+        days:[
+          {d:'SEG',u:'Unit 53 | p.106',t:'Verb + -ing — enjoy, avoid, keep, finish, consider, imagine'},
+          {d:'TER',u:'Unit 54 | p.108',t:'Verb + to… — want, need, decide, forget, remember, hope, offer'},
+          {d:'QUA',u:'Unit 55 | p.110',t:'Verb + object + to… — "I want you to be careful" + expect/allow'},
+          {d:'QUI',u:'Unit 56 | p.112',t:'Verb + -ing or to 1 — remember/regret/forget mudam de sentido'},
+          {d:'SEX',u:'Unit 57 | p.114',t:'Verb + -ing or to 2 — try, need, help: distinções práticas'},
+          {d:'SÁB',u:'Livre',t:'Exercícios adicionais 26–28 pág. 318 • 10 frases com verbos estudados',sat:true},
+        ]
+      },
+      {
+        week:16,title:'Like/Would like, Prefer, Preposição + -ing',
+        days:[
+          {d:'SEG',u:'Unit 58 | p.116',t:'Verb + -ing or to 3 — like/love/hate hábito vs would like desejo'},
+          {d:'TER',u:'Unit 59 | p.118',t:'Prefer and would rather — I\'d rather stay home than go out'},
+          {d:'QUA',u:'Unit 60 | p.120',t:'Preposition + -ing — interested in doing, good at doing, without doing'},
+          {d:'QUI',u:'Unit 61 | p.122',t:'Be/get used to… — "I\'m used to waking up early" (adaptação)'},
+          {d:'SEX',u:'Unit 62 | p.124',t:'Verb + preposition + -ing — succeed in, insist on, dream of'},
+          {d:'SÁB',u:'Livre',t:'Quadro pessoal: verbos + -ing vs verbos + to • Shadowing no app',sat:true},
+        ]
+      },
+      {
+        week:17,title:'Expressões com -ing e infinitivo',
+        days:[
+          {d:'SEG',u:'Unit 63 | p.126',t:'No point in / worth / can\'t help / it\'s no use + -ing'},
+          {d:'TER',u:'Unit 64 | p.128',t:'To… / for… / so that… — propósito e objetivo das ações'},
+          {d:'QUA',u:'Unit 65 | p.130',t:'Adjective + to… — "It\'s difficult to understand" + too/enough'},
+          {d:'QUI',u:'Unit 66 | p.132',t:'Afraid to do vs afraid of -ing — diferenças com adjetivos'},
+          {d:'SEX',u:'Units 67–68 | p.134',t:'See somebody do/doing + -ing clauses como redução de orações'},
+          {d:'SÁB',u:'Livre',t:'Texto longo usando estruturas semanas 15–17 • Shadowing completo',sat:true},
+        ]
+      }
+    ]
+  },
+  {
+    id:8, level:'adv', num:'08',
+    name:'Artigos e Substantivos',
+    units:'Unidades 69–81',weeks:'Semanas 18–20',pages:'Págs. 138–162',
+    badge:'Intermediário-Avançado',
+    weeks_detail:[
+      {week:18,title:'A/An, The e Incontáveis',days:[
+        {d:'SEG',u:'Unit 69 | p.138',t:'Countable and uncountable 1 — a coffee / some coffee / the coffee'},
+        {d:'TER',u:'Unit 70 | p.140',t:'Countable and uncountable 2 — information, advice, news + a piece of'},
+        {d:'QUA',u:'Unit 71 | p.142',t:'A/an and some — introdução, primeira menção, quantidade indefinida'},
+        {d:'QUI',u:'Unit 72 | p.144',t:'A/an and the — "I saw a dog. The dog was barking."'},
+        {d:'SEX',u:'Unit 73 | p.146',t:'The 1 — coisas únicas: the sun, the sky, the internet'},
+        {d:'SÁB',u:'Livre',t:'Exercício adicional 29 pág. 319 • Corrija artigos nos textos do diário',sat:true},
+      ]},
+      {week:19,title:'The com instituições e nomes próprios',days:[
+        {d:'SEG',u:'Unit 74 | p.148',t:'The 2 — school vs the school: at home, at work, in bed'},
+        {d:'TER',u:'Unit 75 | p.150',t:'The 3 — "children" (geral) vs "the children" (específico)'},
+        {d:'QUA',u:'Unit 76 | p.152',t:'The 4 — the giraffe (espécie), the young (grupo), the telephone (invenção)'},
+        {d:'QUI',u:'Units 77–78 | p.154',t:'Names with/without the — países, rios, montanhas, oceanos, ruas'},
+        {d:'SEX',u:'Units 79–80 | p.158',t:'Singular/plural + noun+noun — bus driver, headache, car door'},
+        {d:'SÁB',u:'Livre',t:'Exercício adicional 29 pág. 319 • Revise todos os contextos de the',sat:true},
+      ]},
+      {week:20,title:'Possessivo, Revisão e 100ª Aula!',days:[
+        {d:'SEG',u:'Unit 81 | p.162',t:'"\'s and of… — sister\'s name vs name of the book vs a friend of mine'},
+        {d:'TER',u:'Revisão',t:'Revisão Units 69–81 — exercícios integrados e análise de erros comuns'},
+        {d:'QUA',u:'Ex. | p.319',t:'A/an and the — prática intensiva com textos com lacunas'},
+        {d:'QUI',u:'Produção',t:'Parágrafo descritivo: a/an, the, sem artigo — revisão focada'},
+        {d:'SEX',u:'🎉 Aula 100!',t:'Revise primeiro texto do diário x texto atual — celebre o progresso!'},
+        {d:'SÁB',u:'Livre',t:'Grande revisão Units 1–81 • Shadowing com texto longo e elaborado',sat:true},
+      ]},
+    ]
+  },
+  {
+    id:9, level:'adv', num:'09',
+    name:'Pronomes e Determinantes',
+    units:'Unidades 82–91',weeks:'Semanas 21–22',pages:'Págs. 164–182',
+    badge:'Avançado',
+    weeks_detail:[
+      {week:21,title:'Myself, Some/Any, No/None',days:[
+        {d:'SEG',u:'Unit 82 | p.164',t:'Myself/yourself/themselves — reflexivos, enfáticos, each other'},
+        {d:'TER',u:'Unit 83 | p.166',t:'A friend of mine / my own / by myself — posse e independência'},
+        {d:'QUA',u:'Unit 84 | p.168',t:'There… and it… — existência vs situação e distância'},
+        {d:'QUI',u:'Unit 85 | p.170',t:'Some and any — afirmações, negativos, perguntas e condicionais'},
+        {d:'SEX',u:'Unit 86 | p.172',t:'No/none/any/nothing/nobody — ausência e negação'},
+        {d:'SÁB',u:'Livre',t:'Exercício adicional 30 pág. 320 • Pronomes indefinidos em frases',sat:true},
+      ]},
+      {week:22,title:'Much/Many, Quantificadores, Both/Either/Neither',days:[
+        {d:'SEG',u:'Unit 87 | p.174',t:'Much, many, little, few, a lot, plenty — contáveis vs incontáveis'},
+        {d:'TER',u:'Unit 88 | p.176',t:'All/most/no/none of — quantificadores com e sem of'},
+        {d:'QUA',u:'Unit 89 | p.178',t:'Both/neither/either — os dois (positivo), nenhum, qualquer um'},
+        {d:'QUI',u:'Unit 90 | p.180',t:'All/every/whole — totalidade, frequência e integridade'},
+        {d:'SEX',u:'Unit 91 | p.182',t:'Each and every — individualmente vs coletivamente'},
+        {d:'SÁB',u:'Livre',t:'Revisão Units 82–91 • Texto com 8+ determinantes estudados',sat:true},
+      ]},
+    ]
+  },
+  {
+    id:10, level:'adv', num:'10',
+    name:'Orações Relativas',
+    units:'Unidades 92–97',weeks:'Semana 23',pages:'Págs. 184–194',
+    badge:'Avançado',
+    weeks_detail:[
+      {week:23,title:'Who, Which, Whose, Where e Particípios',days:[
+        {d:'SEG',u:'Unit 92 | p.184',t:'Relative Clauses 1 — who (pessoas), which (coisas), that (ambos)'},
+        {d:'TER',u:'Unit 93 | p.186',t:'Relative Clauses 2 — quando omitir o pronome relativo (objeto)'},
+        {d:'QUA',u:'Unit 94 | p.188',t:'Relative Clauses 3 — whose (posse), whom (formal), where (lugar)'},
+        {d:'QUI',u:'Units 95–96 | p.190',t:'Relative Clauses 4–5 — extra information entre vírgulas + preposição'},
+        {d:'SEX',u:'Unit 97 | p.194',t:'-ing and -ed clauses — "the woman talking to Tom" reduz relativa'},
+        {d:'SÁB',u:'Livre',t:'Reescreva frases simples como orações relativas • Shadowing',sat:true},
+      ]},
+    ]
+  },
+  {
+    id:11, level:'adv', num:'11',
+    name:'Adjetivos e Advérbios',
+    units:'Unidades 98–112',weeks:'Semanas 24–26',pages:'Págs. 196–224',
+    badge:'Avançado',
+    weeks_detail:[
+      {week:24,title:'-ing/-ed, Ordem dos Adjetivos, Comparativos',days:[
+        {d:'SEG',u:'Unit 98 | p.196',t:'Boring/bored — -ing descreve a causa, -ed descreve o sentimento'},
+        {d:'TER',u:'Unit 99 | p.198',t:'Ordem dos adjetivos + look/feel/sound/taste/smell + adjetivo'},
+        {d:'QUA',u:'Unit 100 | p.200',t:'Adjectives and adverbs 1 — quick/quickly: adjetivo vs advérbio'},
+        {d:'QUI',u:'Unit 101 | p.202',t:'Adjectives and adverbs 2 — well, hard/hardly, late/lately'},
+        {d:'SEX',u:'Units 102–103 | p.204',t:'So/such + enough/too — "so tired" vs "such a long day"'},
+        {d:'SÁB',u:'Livre',t:'Exercício adicional 31 pág. 320 • Revise ordem dos adjetivos',sat:true},
+      ]},
+      {week:25,title:'Comparativos, Superlativos e Ordem',days:[
+        {d:'SEG',u:'Unit 104 | p.208',t:'Quite, pretty, rather, fairly — gradações de intensidade'},
+        {d:'TER',u:'Units 105–106 | p.210',t:'Comparative 1–2 — -er/more + much better/any easier'},
+        {d:'QUA',u:'Unit 107 | p.214',t:'Comparative 3 — as…as (igualdade) vs than (superioridade)'},
+        {d:'QUI',u:'Unit 108 | p.216',t:'Superlative — the longest / the most enjoyable + present perfect'},
+        {d:'SEX',u:'Units 109–110 | p.218',t:'Word order 1–2 — sujeito+verbo+objeto+lugar+tempo + advérbios'},
+        {d:'SÁB',u:'Livre',t:'Exercício adicional 32 pág. 321 • Comparações e superlativos da vida',sat:true},
+      ]},
+      {week:26,title:'Still, Yet, Already, Even + Revisão',days:[
+        {d:'SEG',u:'Units 111–112 | p.222',t:'Still/any more/yet/already/even — situações em andamento e mudanças'},
+        {d:'TER',u:'Revisão',t:'Revisão Units 98–112 — exercícios integrados de adjetivos e advérbios'},
+        {d:'QUA',u:'Ex.31–32 | p.320',t:'Adjectives and adverbs — prática intensiva com textos'},
+        {d:'QUI',u:'Produção',t:'Texto rico: comparativos, superlativos, advérbios — revisão e aprimoramento'},
+        {d:'SEX',u:'App completo',t:'Gravar texto e analisar pronúncia + comparar com textos anteriores'},
+        {d:'SÁB',u:'Livre',t:'Study Guide pág. 326 para mapear pontos fracos • Shadowing',sat:true},
+      ]},
+    ]
+  },
+  {
+    id:12, level:'adv', num:'12',
+    name:'Conjunções e Preposições',
+    units:'Unidades 113–136',weeks:'Semanas 27–28',pages:'Págs. 226–272',
+    badge:'Avançado',
+    weeks_detail:[
+      {week:27,title:'Conjunções, Like/As, During/While, Preposições de Tempo',days:[
+        {d:'SEG',u:'Units 113–114 | p.226',t:'Although/though/even though/in spite of/despite/in case'},
+        {d:'TER',u:'Units 115–116 | p.230',t:'Unless/as long as/provided + as (quando/porque/como)'},
+        {d:'QUA',u:'Units 117–118 | p.234',t:'Like and as + like/as if — comparações e aparências'},
+        {d:'QUI',u:'Units 119–120 | p.238',t:'During/for/while + by/until/by the time — prazos e duração'},
+        {d:'SEX',u:'Units 121–122 | p.242',t:'At/on/in (tempo) + on time/in time + at the end/in the end'},
+        {d:'SÁB',u:'Livre',t:'Exercício adicional 33 pág. 322 • Conjunções variadas na escrita',sat:true},
+      ]},
+      {week:28,title:'Preposições de Lugar, By, Noun/Adj/Verb + Preposition',days:[
+        {d:'SEG',u:'Units 123–125 | p.246',t:'In/at/on (posição) 1–3 — at the top, in the corner, on the left'},
+        {d:'TER',u:'Units 126–127 | p.252',t:'To/at/in/into + in/on/at outros usos — on television, at a concert'},
+        {d:'QUA',u:'Unit 128 | p.256',t:'By — agente passivo, meio de transporte e prazo'},
+        {d:'QUI',u:'Units 129–131 | p.258',t:'Noun/adjective + preposition — reason for, good at, afraid of'},
+        {d:'SEX',u:'Units 132–136 | p.264',t:'Verb + preposition 1–5 — listen to, look at, talk about, wait for'},
+        {d:'SÁB',u:'Livre',t:'Exercícios adicionais 34–36 pág. 322–323 • Lista pessoal verb+prep',sat:true},
+      ]},
+    ]
+  },
+  {
+    id:13, level:'adv', num:'13',
+    name:'Phrasal Verbs',
+    units:'Unidades 137–145',weeks:'Semana 29',pages:'Págs. 274–290',
+    badge:'Avançado',
+    weeks_detail:[
+      {week:29,title:'SEMANA FINAL — Phrasal Verbs completos',days:[
+        {d:'SEG',u:'Unit 137 | p.274',t:'Phrasal verbs 1 — introdução: posição do objeto, verb+prep'},
+        {d:'TER',u:'Units 138–139 | p.276',t:'Phrasal verbs 2–3 — in/out: join in, find out, run out, work out'},
+        {d:'QUA',u:'Units 140–141 | p.280',t:'Phrasal verbs 4–5 — on/off: put on, take off, call off, set off'},
+        {d:'QUI',u:'Units 142–144 | p.284',t:'Phrasal verbs 6–8 — up/down: give up, break down, grow up'},
+        {d:'SEX',u:'Unit 145 | p.290',t:'🎓 Aula 145 FINAL — away/back + CELEBRAÇÃO! Compare 1ª gravação vs hoje'},
+        {d:'SÁB',u:'Grande Final',t:'Study Guide completo pág. 326–335 • Texto: sua jornada de aprendizado',sat:true},
+      ]},
+    ]
+  },
+];
+
+// First 8 sample lessons for the lesson model page
+const LESSON_SAMPLES = [
+  {
+    num:'Aula 1', unit:'Unidade 1 | Página 2',
+    title:'Present Continuous (I am doing)',
+    module:'Módulo 1 — Presente e Passado', week:'Semana 1, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Aquecimento — Revisão',
+        content:'Como foi o fim de semana? Descreva em inglês o que fez. Esta é a primeira aula — apresente-se em inglês para o seu diário.'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Present Continuous',
+        items:['Leia a página esquerda da Unidade 1 (pág. 2) com atenção total',
+          'Observe os exemplos: "She\'s driving to work" / "I\'m reading a book"',
+          'Anote os verbos de mudança: getting, becoming, improving, starting, increasing',
+          'Entenda: ação acontecendo AGORA vs ação em progresso (não necessariamente neste exato segundo)']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página Direita',
+        items:['Exercise 1.1 — o que está acontecendo nas imagens (cross, hide, scratch…)',
+          'Exercise 1.2 — conecte as frases da esquerda com as continuações corretas',
+          'Exercise 1.3 — complete as frases com o verbo no present continuous',
+          'Corrija suas respostas com o gabarito (pág. 336) e anote o que errou']},
+      {type:'diary',time:'60–68 min',title:'Diário — Produção Escrita',
+        content:'Escreva 3–5 frases descrevendo o que está acontecendo ao seu redor AGORA e o que está acontecendo em sua vida ESTA SEMANA. Use o present continuous com propósito.'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole as frases do diário no app. Ouça o narrador (American accent). Repita em voz alta junto com o áudio.'},
+    ],
+    tip:'Dica: Nesta primeira aula, o mais importante é entender a DIFERENÇA entre "She drives to work" (rotina) e "She\'s driving to work" (agora ou em andamento). Guarde este contraste — ele é a base para as próximas 4 unidades.'
+  },
+  {
+    num:'Aula 2', unit:'Unidade 2 | Página 4',
+    title:'Present Simple (I do)',
+    module:'Módulo 1 — Presente e Passado', week:'Semana 1, Terça-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão da Aula 1',
+        content:'Diga 3 frases no present continuous sobre o que acontece agora. Depois diga 3 frases sobre o que fez hoje. Qual tempo verbal você usaria para cada uma?'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Present Simple',
+        items:['Leia a Unidade 2 (pág. 4) inteira antes de fazer os exercícios',
+          'Três usos principais: (1) rotinas e hábitos, (2) fatos e verdades gerais, (3) sentimentos permanentes',
+          'Formação: I/you/we/they + verb; he/she/it + verb+s',
+          'Advérbios de frequência: always, usually, often, sometimes, rarely, never',
+          'Nota cultural: "I wake up at 6am" — o inglês usa presente simples onde o português às vezes usa futuro']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 5',
+        items:['Exercise 2.1 — use present simple para fatos sobre o universo e ciência',
+          'Exercise 2.2 — complete com a forma correta do verbo',
+          'Exercise 2.3 — escreva sobre rotinas usando advérbios de frequência',
+          'Corrija com gabarito pág. 336–337']},
+      {type:'diary',time:'60–68 min',title:'Diário — Rotina Diária',
+        content:'Descreva sua rotina de segunda a sexta em 5–8 frases. Use present simple com advérbios: "I usually wake up at 6am. I always have coffee before work."'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole a descrição da rotina no app. Pratique listening com sotaque americano. Foque na pronúncia do -s final: works, starts, drives.'},
+    ],
+    tip:'Dica: O erro mais comum de brasileiros é usar present continuous para rotinas: "I am going to the gym every day" (errado). A forma correta é "I go to the gym every day." Reserve o continuous para ações em andamento.'
+  },
+  {
+    num:'Aula 6', unit:'Unidade 5 | Página 10',
+    title:'Past Simple (I did)',
+    module:'Módulo 1 — Presente e Passado', week:'Semana 2, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão da Semana 1',
+        content:'Em 3 frases: descreva sua rotina (present simple) e o que está acontecendo agora (present continuous). Mostre que você domina o contraste.'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Past Simple',
+        items:['Leia a Unidade 5 (pág. 10) com atenção especial às formas irregulares',
+          'Regra geral: verbos regulares + -ed (worked, started, finished)',
+          'Verbos irregulares: go→went, have→had, wake→woke, eat→ate, come→came',
+          'Contexto obrigatório: yesterday, last week, in 2020, two hours ago, when I was young',
+          'Negativa: didn\'t + infinitivo (não: "I didn\'t went" — erro gravíssimo)']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 11',
+        items:['Exercise 5.1 — forme frases no passado com os verbos dados',
+          'Exercise 5.2 — transforme do presente para o passado',
+          'Exercise 5.3 — escreva perguntas no past simple',
+          'Consulte verbos irregulares no Appendix 1 (pág. 292) sempre que precisar']},
+      {type:'diary',time:'60–68 min',title:'Diário — Ontem em Inglês',
+        content:'Escreva 6–8 frases sobre o que você fez ontem. Inclua pelo menos 4 verbos irregulares. Ex: "Yesterday I woke up at 7am. I had breakfast and went to work."'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole o texto do diário no app. Pratique shadowing frase por frase. Foque na pronúncia do -ed: worked (workt), started (startid), wanted (wantid).'},
+    ],
+    tip:'Dica: A pronúncia do -ed tem 3 formas: /t/ após sons surdos (worked, stopped), /id/ após t e d (wanted, started), /d/ em todos os outros (called, played). Preste atenção nisso no shadowing.'
+  },
+  {
+    num:'Aula 11', unit:'Unidade 7 | Página 14',
+    title:'Present Perfect 1 (I have done)',
+    module:'Módulo 2 — Present Perfect e Passado Perfeito', week:'Semana 3, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão do Módulo 1',
+        content:'Diga uma frase em cada tempo: present simple, present continuous, past simple, past continuous. Conecte-as numa mini-história.'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Present Perfect',
+        items:['Leia a Unidade 7 (pág. 14) — este é um dos temas mais importantes do livro',
+          'Conceito central: ação no PASSADO com relevância ou conexão ao PRESENTE',
+          'Forma: have/has + past participle (I have done, she has gone)',
+          '"I lost my key" — evento específico no passado (quando? importa)',
+          '"I have lost my key" — ainda não achei, ainda relevante AGORA',
+          'Situações sem tempo específico: "I have been to Italy" (alguma vez na vida)']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 15',
+        items:['Exercise 7.1 — escolha entre past simple e present perfect',
+          'Exercise 7.2 — complete com have/has + particípio',
+          'Exercise 7.3 — escreva sobre experiências de vida',
+          'Corrija e anote TODOS os erros — este tema costuma gerar confusão']},
+      {type:'diary',time:'60–68 min',title:'Diário — Experiências de Vida',
+        content:'Escreva 5 coisas que você já fez na vida (present perfect) e 3 coisas que ainda quer fazer. Use: "I have been to… / I have tried… / I have never…"'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole o texto no app. No shadowing, preste atenção na pronúncia de "have" (forte: /hæv/, fraco: /həv/ ou /əv/) e nas contrações I\'ve / She\'s / We\'ve.'},
+    ],
+    tip:'Dica crucial: O present perfect NÃO existe em português da mesma forma. "I have lived here for 5 years" = ainda moro aqui agora. "I lived here for 5 years" = morei e saí. Esta diferença muda tudo.'
+  },
+  {
+    num:'Aula 26', unit:'Unidade 19 | Página 38',
+    title:'Present Tenses for the Future',
+    module:'Módulo 3 — Futuro', week:'Semana 6, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão dos Módulos 1–2',
+        content:'Diga o que você fez semana passada (past), o que tem feito ultimamente (present perfect) e o que está acontecendo em sua vida agora (present continuous).'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Futuro com Tempos Presentes',
+        items:['Leia a Unidade 19 (pág. 38) e o Appendix 3 (pág. 295)',
+          'Present continuous para o futuro: planos CONFIRMADOS com outra pessoa',
+          '"I\'m meeting Sarah tomorrow" — já está marcado, é certo',
+          'Present simple para horários FIXOS: "The train leaves at 8:30"',
+          'Diferença: "I\'m going to the gym tomorrow" (minha intenção) vs "The gym opens at 6am" (horário fixo)']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 39',
+        items:['Exercise 19.1 — escolha entre present continuous, going to e will',
+          'Exercise 19.2 — complete os diálogos sobre planos futuros',
+          'Exercise 19.3 — escreva sobre seus planos para a semana',
+          'Verifique Appendix 3 (pág. 295) para o quadro completo do futuro']},
+      {type:'diary',time:'60–68 min',title:'Diário — Planos da Semana',
+        content:'Escreva 6 frases sobre seus planos para os próximos dias. Use present continuous para o que já está marcado e present simple para horários fixos do seu trabalho/rotina.'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole os planos no app. Escute a diferença de entonação entre afirmações e perguntas sobre o futuro. Pratique: "Are you working tomorrow?" com entonação ascendente.'},
+    ],
+    tip:'Dica: "I\'m having dinner with Tom tonight" (combinado) vs "I\'ll have dinner at home" (decisão agora). O present continuous para futuro implica COMPROMISSO. O will implica decisão espontânea.'
+  },
+  {
+    num:'Aula 36', unit:'Unidade 26 | Página 52',
+    title:'Can, Could and (be) able to',
+    module:'Módulo 4 — Verbos Modais', week:'Semana 8, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão do Módulo 3',
+        content:'Descreva 3 planos futuros usando formas diferentes: going to, will, present continuous. Explique por que escolheu cada forma.'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Can, Could, Be Able To',
+        items:['Leia a Unidade 26 (pág. 52) — foque nas diferenças sutis',
+          'Can: habilidade presente — "I can speak English"',
+          'Could: habilidade geral no passado — "When I was young, I could run fast"',
+          'Was/were able to: situação específica no passado — "I was able to finish on time"',
+          'Diferença importante: "He could escape" (tinha habilidade) vs "He was able to escape" (conseguiu de fato escapar naquela situação)',
+          'Can\'t: impossibilidade ou incapacidade']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 53',
+        items:['Exercise 26.1 — could vs was/were able to em contextos específicos',
+          'Exercise 26.2 — complete com can/can\'t/could/couldn\'t/be able to',
+          'Exercise 26.3 — escreva sobre habilidades passadas e presentes',
+          'Corrija com gabarito e entenda cada resposta errada']},
+      {type:'diary',time:'60–68 min',title:'Diário — Habilidades',
+        content:'Escreva sobre: (1) 3 coisas que você consegue fazer bem hoje, (2) 2 habilidades que tinha quando criança mas não tem mais, (3) 2 habilidades que quer desenvolver.'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole o texto no app. Preste atenção na pronúncia fraca de "can" em frases afirmativas (/kən/) vs forte em frases de ênfase (/kæn/). Grave e compare.'},
+    ],
+    tip:'Dica: "Can you swim?" — sim, sei nadar. "Were you able to swim across the river?" — você conseguiu fazer isso naquela situação específica? A diferença parece sutil mas é importante no inglês natural.'
+  },
+  {
+    num:'Aula 51', unit:'Unidade 38 | Página 76',
+    title:'If I do… and If I did…',
+    module:'Módulo 5 — If/Wish e Voz Passiva', week:'Semana 11, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão dos Módulos 3–4',
+        content:'Diga 2 frases com will (futuro), 2 com would (hipotético) e 2 com should (conselho). Percebe a diferença de "realidade" entre elas?'},
+      {type:'theory',time:'10–35 min',title:'Teoria — 1st e 2nd Conditional',
+        items:['Leia a Unidade 38 (pág. 76) com cuidado total',
+          '1st conditional: situação real ou possível — if + present, will + infinitivo',
+          '"If it rains, I\'ll stay home" — pode acontecer de verdade',
+          '2nd conditional: situação hipotética ou improvável — if + past, would + infinitivo',
+          '"If I won the lottery, I would travel the world" — improvável, hipotético',
+          'ATENÇÃO: "If I were you..." — never "If I was you" no padrão formal (were para todos)']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 77',
+        items:['Exercise 38.1 — escolha entre 1st e 2nd conditional',
+          'Exercise 38.2 — complete as frases condicionais',
+          'Exercise 38.3 — crie suas próprias frases condicionais',
+          'Exercícios adicionais 19–21 (pág. 315) para prática extra']},
+      {type:'diary',time:'60–68 min',title:'Diário — Condições e Hipóteses',
+        content:'Escreva: (1) 3 planos reais com 1st conditional ("If I finish work early…"), (2) 3 situações hipotéticas com 2nd conditional ("If I could live anywhere…").'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole o texto no app. Ouça a entonação das frases condicionais — a primeira parte (if clause) sobe e a segunda desce. Imite esse padrão no shadowing.'},
+    ],
+    tip:'Dica para brasileiros: Em português dizemos "Se eu tivesse dinheiro, viajaria" usando imperfeito do subjuntivo. Em inglês o equivalente é o 2nd conditional com past simple + would. Não existe forma especial de subjuntivo em inglês!'
+  },
+  {
+    num:'Aula 71', unit:'Unidade 53 | Página 106',
+    title:'Verb + -ing (Enjoy doing / Stop doing)',
+    module:'Módulo 7 — -ing e Infinitivo', week:'Semana 15, Segunda-feira',
+    duration:'70 minutos',
+    blocks:[
+      {type:'warm',time:'0–10 min',title:'Revisão dos Módulos 5–6',
+        content:'Diga 2 frases no passivo, 2 em reported speech e 2 question tags. Este é o vocabulário gramatical que você construiu nas últimas semanas.'},
+      {type:'theory',time:'10–35 min',title:'Teoria — Verbos + Gerúndio (-ing)',
+        items:['Leia a Unidade 53 (pág. 106) inteira',
+          'Verbos que sempre pedem -ing: enjoy, mind, avoid, keep, finish, consider, imagine, suggest, risk, practice',
+          '"I enjoy swimming" — NUNCA "I enjoy to swim"',
+          '"She keeps forgetting" — continua fazendo algo repetidamente',
+          '"He avoided talking about it" — escolheu não fazer algo',
+          'Dica: se você pode substituir por "a ação de", provavelmente é -ing']},
+      {type:'practice',time:'35–60 min',title:'Exercícios — Página 107',
+        items:['Exercise 53.1 — complete com a forma -ing do verbo',
+          'Exercise 53.2 — escreva frases usando os verbos da lista',
+          'Exercise 53.3 — contextos com keep, avoid, consider, suggest',
+          'Exercícios adicionais 26–28 (pág. 318)']},
+      {type:'diary',time:'60–68 min',title:'Diário — Gostos e Hábitos',
+        content:'Escreva 8 frases usando os verbos desta unidade: o que você enjoy, avoid, consider, keep doing na sua rotina de estudos e treino.'},
+      {type:'app',time:'68–70 min',title:'App Listen & Shadow',
+        content:'Cole o texto no app. Foque na pronúncia do -ing: em inglês falado rápido, "going" soa como "goin\'", "doing" como "doin\'". Observe isso no narrador.'},
+    ],
+    tip:'Dica: Crie sua lista pessoal de verbos + -ing. Toda vez que aprender um novo verbo, classifique imediatamente: ele pede -ing, to, ou pode pedir os dois (com significados diferentes)? Esta lista vai economizar muitos erros futuros.'
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────
+let currentMonth, currentYear, startDate, completed = new Set();
+let selectedLesson = 0;
+
+function init() {
+  const now = new Date();
+  currentMonth = now.getMonth();
+  currentYear = now.getFullYear();
+  // Study starts on next Monday
+  startDate = new Date(now);
+  const day = startDate.getDay();
+  const diff = day === 0 ? 1 : (day === 1 ? 0 : 8 - day);
+  startDate.setDate(startDate.getDate() + diff);
+  startDate.setHours(0,0,0,0);
+
+  // Load progress
+  const saved = localStorage.getItem('eng_progress');
+  if (saved) completed = new Set(JSON.parse(saved));
+
+  renderModules();
+  renderCalendar();
+  renderLessonSelector();
+  renderLesson(0);
+  renderChecklist();
+}
+
+// ── MODULES ───────────────────────────────────────────────────────
+function renderModules() {
+  const g = document.getElementById('modGrid');
+  g.innerHTML = MODULES.map((m,i) => `
+    <div class="mod-card lv-${m.level}" onclick="toggleMod(${i})" id="mc${i}">
+      <div class="mod-num">${m.num}</div>
+      <div class="mod-info">
+        <div class="mod-name">${m.name}</div>
+        <div class="mod-meta">${m.units} &nbsp;·&nbsp; ${m.weeks} &nbsp;·&nbsp; ${m.pages}</div>
+      </div>
+      <div class="mod-badge">${m.badge}</div>
+      <div class="mod-detail" id="md${i}">
+        <div class="mod-weeks">
+          ${m.weeks_detail.map(w => `
+            <div class="week-row">
+              <div class="week-head">
+                <span class="week-tag">Semana ${w.week}</span>
+                <span class="week-title">${w.title}</span>
+              </div>
+              <div class="day-list">
+                ${w.days.map(d => `
+                  <div class="day-item">
+                    <span class="day-name${d.sat?' day-sat':''}">${d.d}</span>
+                    <span class="day-unit">${d.u}</span>
+                    <span class="day-desc">${d.t}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleMod(i) {
+  const detail = document.getElementById('md'+i);
+  const card = document.getElementById('mc'+i);
+  const open = detail.classList.contains('open');
+  document.querySelectorAll('.mod-detail').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.mod-card').forEach(c=>c.classList.remove('expanded'));
+  if (!open) { detail.classList.add('open'); card.classList.add('expanded'); }
+}
+
+// ── CALENDAR ──────────────────────────────────────────────────────
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+function changeMonth(dir) {
+  currentMonth += dir;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  renderCalendar();
+}
+
+function getLessonForDate(date) {
+  const d = new Date(date); d.setHours(0,0,0,0);
+  const diff = Math.round((d - startDate) / 86400000);
+  if (diff < 0) return null;
+  const dow = d.getDay();
+  if (dow === 0) return null; // Sunday
+  if (dow === 6) return {sat:true, week: Math.floor(diff/7)+1};
+  // Monday=1..Friday=5
+  const weekNum = Math.floor(diff / 7);
+  const dayInWeek = dow - 1; // 0=Mon..4=Fri
+  const lessonNum = weekNum * 5 + dayInWeek + 1;
+  if (lessonNum > 145) return null;
+  return {lessonNum, week: weekNum+1};
+}
+
+function renderCalendar() {
+  document.getElementById('calMonth').textContent = `${MONTHS_PT[currentMonth]} ${currentYear}`;
+  const g = document.getElementById('calGrid');
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  let html = DAYS_PT.map(d=>`<div class="cal-day-hd">${d}</div>`).join('');
+
+  const first = new Date(currentYear, currentMonth, 1);
+  const startDay = first.getDay();
+  for (let i=0;i<startDay;i++) html += `<div class="cal-day empty"></div>`;
+
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+  for (let d=1;d<=daysInMonth;d++) {
+    const date = new Date(currentYear, currentMonth, d);
+    const isToday = date.getTime()===today.getTime();
+    const dow = date.getDay();
+    const info = getLessonForDate(date);
+    let cls = 'cal-day';
+    if (isToday) cls += ' today';
+    if (dow===0) cls += ' sun';
+    if (dow===6) cls += ' sat';
+    if (info && !info.sat) cls += ' has-lesson';
+    let inner = `<div class="cal-day-n">${d}</div>`;
+    if (info) {
+      if (info.sat) inner += `<div class="cal-lesson sat-tag">Revisão S${info.week}</div>`;
+      else inner += `<div class="cal-lesson">Aula ${info.lessonNum}</div>`;
+    }
+    html += `<div class="${cls}">${inner}</div>`;
+  }
+  g.innerHTML = html;
+}
+
+// ── LESSON MODEL ──────────────────────────────────────────────────
+function renderLessonSelector() {
+  document.getElementById('lessonSelector').innerHTML = LESSON_SAMPLES.map((l,i) =>
+    `<div class="lsb${i===0?' active':''}" onclick="selectLesson(${i})">
+      <div class="lsb-n">${l.num}</div>
+      <div class="lsb-t">${l.unit.split('|')[0]}</div>
+    </div>`
+  ).join('');
+}
+
+function selectLesson(i) {
+  selectedLesson = i;
+  document.querySelectorAll('.lsb').forEach((b,j)=>b.classList.toggle('active',j===i));
+  renderLesson(i);
+}
+
+function renderLesson(i) {
+  const l = LESSON_SAMPLES[i];
+  const typeIcons = {warm:'☀️',theory:'📖',practice:'✏️',diary:'📔',app:'🎧'};
+  const typeLabels = {warm:'Aquecimento',theory:'Teoria',practice:'Exercícios',diary:'Diário',app:'App'};
+  document.getElementById('lessonCard').innerHTML = `
+    <div class="lc-header">
+      <div class="lc-eye">${l.module} &nbsp;·&nbsp; ${l.week}</div>
+      <div class="lc-title">${l.title}</div>
+      <div class="lc-meta">
+        <span>${l.num}</span>
+        <span>${l.unit}</span>
+        <span>⏱ ${l.duration}</span>
+      </div>
+    </div>
+    <div class="lc-body">
+      <div class="lc-blocks">
+        ${l.blocks.map(b=>`
+          <div class="lc-block ${b.type}">
+            <div class="lc-bt">${typeIcons[b.type]} ${typeLabels[b.type]}</div>
+            <h4>${b.title}</h4>
+            ${b.content ? `<p>${b.content}</p>` : ''}
+            ${b.items ? `<ul>${b.items.map(it=>`<li>${it}</li>`).join('')}</ul>` : ''}
+            <div class="lc-time"><span class="time-pill">${b.time}</span></div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="lc-tip"><strong>💡 Nota do professor:</strong> ${l.tip}</div>
+    </div>
+  `;
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────────
+function renderChecklist() {
+  const body = document.getElementById('checklistBody');
+  let html = '';
+  let totalDone = 0;
+  MODULES.forEach(m => {
+    m.weeks_detail.forEach(w => {
+      html += `<div class="check-week">
+        <div class="check-wh">
+          <div class="check-wt">Semana ${w.week} — ${w.title}</div>
+          <div class="check-wp">${m.name}</div>
+        </div>
+        <div class="check-list">
+      `;
+      w.days.filter(d=>!d.sat).forEach(d => {
+        const id = `s${w.week}_${d.d}`;
+        const done = completed.has(id);
+        if (done) totalDone++;
+        html += `
+          <div class="check-item${done?' done':''}" onclick="toggleCheck('${id}')">
+            <div class="check-box"></div>
+            <div class="check-text">
+              ${d.t}
+              <div class="check-unit">${d.u} &nbsp;·&nbsp; ${d.d}</div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div></div>';
+    });
+  });
+  body.innerHTML = html;
+  updateProgress(totalDone);
+}
+
+function toggleCheck(id) {
+  if (completed.has(id)) completed.delete(id);
+  else completed.add(id);
+  localStorage.setItem('eng_progress', JSON.stringify([...completed]));
+  renderChecklist();
+  showToast(completed.has(id) ? '✅ Aula marcada!' : 'Aula desmarcada');
+}
+
+function updateProgress(done) {
+  const total = 145;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('totalFill').style.width = pct+'%';
+  document.getElementById('totalLabel').textContent = `${done} de ${total} aulas concluídas (${pct}%)`;
+}
+
+// ── UI ────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
